@@ -1,0 +1,83 @@
+# Part 1 - Bugs
+## Failure Inducing Input
+```
+public class ArrayTests {
+	@Test 
+	public void testReverseInPlace() {
+    int[] input1 = { 3, 4, 5, 6, 7};
+    ArrayExamples.reverseInPlace(input1);
+    assertArrayEquals(new int[]{ 7,6,5,4,3 }, input1);
+	}
+}
+```
+## Non-Failure Inducing Input
+```
+public class ArrayTests {
+	@Test 
+	public void testReverseInPlace() {
+    int[] input1 = { 3 };
+    ArrayExamples.reverseInPlace(input1);
+    assertArrayEquals(new int[]{ 3 }, input1);
+	}
+}
+```
+## Symptom
+![Symptom](Screenshot 2024-05-06 135558p.png)
+## The Bug
+```
+public class ArrayExamples {
+
+  // Changes the input array to be in reversed order
+  static void reverseInPlace(int[] arr) {
+    for(int i = 0; i < arr.length; i += 1) {
+      arr[i] = arr[arr.length - i - 1];
+    }
+  }
+
+}
+```
+```
+public class ArrayExamples {
+
+  // Changes the input array to be in reversed order
+  static void reverseInPlace(int[] arr) {
+    int[] newArray = new int[arr.length];
+    for(int i = 0; i < arr.length; i += 1) {
+      newArray[i] = arr[arr.length - i - 1];
+    }
+    for (int i = 0; i < arr.length; i += 1) {
+      arr[i] = newArray[i];
+    }
+  }
+}
+```
+This fixes the issue because _________
+
+# Part 2 - Researching Commands: grep
+1. Recursive Search (-r or --recursive):
+2. 
+3. 
+4. 
+
+All sourced from ChatGPT. 
+Prompt: "what are 4 interesting command-line options of alternative ways to use grep?" 
+Output: "The grep command is an incredibly powerful tool used in UNIX and Linux environments for searching plain-text data sets for lines that match a regular expression. Here are four interesting command-line options that show some of the alternative ways to use grep:
+
+Recursive Search (-r or --recursive):
+This option allows grep to read all files under each directory, recursively. This is particularly useful when you are trying to find occurrences of a string or pattern within files located in a directory and all of its subdirectories.
+Example: grep -r "search_pattern" /path/to/directory
+Invert Match (-v or --invert-match):
+Using this option, grep will return all lines that do not match the specified pattern. This is useful for filtering out lines that contain certain words or patterns.
+Example: grep -v "exclude_pattern" filename
+Line Number (-n or --line-number):
+This option causes grep to output the line number in the file before each matching line. This can be very helpful when you need to know not just if a pattern exists in a file, but where it is located.
+Example: grep -n "pattern" filename
+Context Control: Before, After, and Around (-B, -A, -C):
+These options are used to display additional context around the lines that match the pattern. Specifically, -B (before), -A (after), and -C (context) control the number of lines before, after, and around the matched lines, respectively.
+Examples:
+Show 2 lines before a match: grep -B 2 "pattern" filename
+Show 3 lines after a match: grep -A 3 "pattern" filename
+Show 2 lines before and after a match: grep -C 2 "pattern" filename
+These options can significantly enhance your ability to search and analyze files on the command line, making grep not only a tool for simple searches but also a powerful tool for complex data analysis and troubleshooting." 
+I copied the four headings and omitted the rest of ChatGPT's output.
+
