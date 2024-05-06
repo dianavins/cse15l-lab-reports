@@ -22,7 +22,7 @@ public class ArrayTests {
 }
 ```
 ## Symptom
-<img width="712" alt="Screenshot 2024-05-06 135558p" src="https://github.com/dianavins/cse15l-lab-reports/assets/64227228/904a06b2-2685-497f-9748-7512e80e2ca9">
+![Symptom](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/904a06b2-2685-497f-9748-7512e80e2ca9)
 
 ## The Bug
 ```
