@@ -5,7 +5,7 @@ Keyboard input:
 `<passphrase for key><ENTER>`
 ![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/22388e33-891f-4661-b0bd-d7204d7491c1)
 
-##2. Clone your fork of the repository from your Github account (using the SSH URL)
+## 2. Clone your fork of the repository from your Github account (using the SSH URL)
 `git<SPACE>clone<SPACE><CTRL><C>`
 ![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/aae7e682-4356-4265-8768-fe8d3d462423)
 I then entered the repository folder:
