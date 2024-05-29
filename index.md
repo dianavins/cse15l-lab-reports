@@ -62,11 +62,10 @@ Here is the full output:
 **TA Response**
 Your syntax seems correct, try a different method of defining variables $FAILS and $NUMTESTS. They might not be integer or float values, thereby preventing any arithmetic from being conducted. Try to utilize `awk` for simplicity since it automatically uses spaces as a delimiter.
 
-In the original script, it was trying to use cut to extract fields based on spaces. The main issue was the complexity of the text format it was dealing with:
-- The line Tests run: 5, Failures: 1 contains text with mixed delimiters (spaces and commas).
-- cut -d ' ' -f 5 attempts to split the text by spaces and extract the 5th field. However, this approach is fragile and can fail if the exact spacing or structure of the text changes.
-- This approach assumes a very specific structure of the line.
-- It failed because LASTLINE was treated as a command substitution, not a string to be processed.
+In the original script, you were trying to use cut to extract fields based on spaces. The main issue was the complexity of the text format you were dealing with:
+- The line `Tests run: 5, Failures: 1` contains text with mixed delimiters (spaces and commas).
+- `cut -d ' ' -f 5` attempts to split the text by spaces and extract the 5th field. However, this approach is fragile and can fail if the exact spacing or structure of the text changes.
+- It failed because `$LASTLINE` was treated as a command substitution, not a string to be processed.
   
 ---
 **Student Response**
