@@ -66,7 +66,7 @@ In the original script, it was trying to use cut to extract fields based on spac
 - The line Tests run: 5, Failures: 1 contains text with mixed delimiters (spaces and commas).
 - cut -d ' ' -f 5 attempts to split the text by spaces and extract the 5th field. However, this approach is fragile and can fail if the exact spacing or structure of the text changes.
 - This approach assumes a very specific structure of the line.
-- It failed because $LASTLINE was treated as a command substitution, not a string to be processed.
+- It failed because \$LASTLINE was treated as a command substitution, not a string to be processed.
 ---
 **Student Response**
 Here is my fixed code:
