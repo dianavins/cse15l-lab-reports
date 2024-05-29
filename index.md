@@ -1,87 +1,159 @@
-# Vim usage example: Lab 7
-## 1. Log into ieng6
-Keyboard input:
-`ssh<SPACE>dvins@ieng6-201.ucsd.edu<ENTER>`
-`<passphrase for key><ENTER>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/22388e33-891f-4661-b0bd-d7204d7491c1)
+# Lab Report 5
+####
+# Part 1 - Debugging Scenario
 
-## 2. Clone your fork of the repository from your Github account (using the SSH URL)
-`git<SPACE>clone<SPACE><CTRL><C>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/aae7e682-4356-4265-8768-fe8d3d462423)
-I then entered the repository folder:
-`cd<SPACE>l<TAB>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/e7b5153a-43ad-40e2-85c8-9f4e8af78948)
+## Student's original post
+####
+**Student Post Title:** Issues with grade.sh -- Not grading despite correct calculation syntax
+I wrote my grade.sh to calculate the grade based on (total number of tests - number of failed tests) / total number of tests. The calculation is in `GRADE='100 - (($FAILS / $NUMTESTS))*100)'` (In this post, I replaced the backticks in the code with ' so that markdown wouldn't read them as backticks for a code block) but it gives me output `grade.sh: command substitution: line 46: syntax error near unexpected token '('`. What do I do?
+Here is the code:
+```
+CPATH='.:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar'
 
-## 3. Run the tests, demonstrating that they fail
-I copy and pasted the compiling and running code for java and junit files from Lab 4's instructions:
-First copy: javac -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar *.java
-`<CTRL><C><ENTER>`
-Second copy: java -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar org.junit.runner.JUnitCore
-`<CTRL><C><SPACE>L<TAB>Tests`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/b032d8ee-5cfa-437a-a06e-f0719ef34dab)
+rm -rf student-submission
+rm -rf grading-area
 
-## 4. Edit the code file to fix the failing test
-I entered ListExamples.java using vim:
-`vim<SPACE>L<TAB>.java<ENTER>` to enter the file
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/dda534c8-5350-4ba7-903a-350470b89f15)
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/5fffb86c-2d18-4a3a-ba69-bf3fb6692e2e)
+mkdir grading-area
 
-`43j` to move the cursor to the line with the error
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/513bc334-be79-48c9-a62c-c3465f01f12d)
+# step 1: clone the student's repo
 
-`1e` to move the cursor to the end of the first word (index2), so the cursor is now over "2"
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/91935e6b-c1a0-47fb-9184-f20c2c6d3698)
+git clone $1 student-submission
+echo 'Finished cloning'
 
-`i` to enter insert mode
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/3971623f-cb0c-4b6a-970a-ca4a60541b6f)
-(you can see that you're in insert mode by the "-- INSERT --" in the lower left-hand quarter)
+# step 2 check that the student code contains ListExamples.java
 
-`<Del>1` to delete 1 and replace it with 2
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/dcb22616-cf4f-464f-a4f9-9ce594857cd5)
+if [[ -f student-submission/ListExamples.java ]]; then
+    echo "File Existed"
+else
+    echo "ListExamples.java does not exist"
+    echo "Grade: 0"
+    exit 1
+fi
 
-`<Esc>` to exit insert mode
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/884eb939-8107-46f0-99ae-c5cc0f5f3ece)
-(you can see that you're not in insert mode by the lack of "-- INSERT --" in the lower left-hand quarter)
+# step 3: put all relevant files in the grading-area directory
+# ListExamples.java, TestListExamples.java, lib directory
 
-`:wq<ENTER>` to save the edits, exit the file and return to terminal
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/6cdcc99d-bcde-4243-bdf5-7ce7e921e40d)
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/3cfd752e-9492-4c66-b3b9-35492694b1d7)
+cp student-submission/ListExamples.java TestListExamples.java grading-area
+cp -r lib grading-area
 
-## 5. Run the tests, demonstrating that they now succeed
-In the command line, I used the up arrows to reach the previously used `javac -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar *.java` to compile and then `java -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar org.junit.runner.JUnitCore ListExamplesTests` to run the tests.
-`<UP><UP><UP><ENTER>` to run the javac command
-`<UP><UP><UP><ENTER>` to run the test file command
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/7a2d5906-8a8b-460b-9b12-aed5e8bbd724)
+# step 4: Compile tha java files and check that they compiled successfully
+cd grading-area
+javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" ListExamples.java TestListExamples.java
+echo "This is the exit code of javac: $?"
 
-## 6. Commit and push the resulting change to your Github account (you can pick any commit message!)
-To add the changed file to the commit:
-`git<SPACE>add<SPACE>L<TAB>.java`
-To create a commit and message:
-`git<SPACE>com<TAB><ENTER>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/dbe9b1f5-c901-4930-8eca-ad113032136b)
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/c605a813-f00b-4a8d-8ea4-4184b7b68781)
+# step 5: Grade the student's code
+touch output.txt
+java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples > output.txt
 
-Scroll down below changes to be committed:
-`12j`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/563fea90-deb6-456e-a5f0-b1a599e582ef)
+tail -n 2 output.txt > output2.txt
+LASTLINE=$(head -n 1 output2.txt)
+echo "last line: " $LASTLINE
 
-Enter insert mode:
-`i`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/250171ff-5df5-46e5-8b95-ca29883cbd71)
+FAILS=$($LASTLINE | cut -d ' ' -f 5)
+echo "num fails: " $FAILS
+NUMTESTS=$($LASTLINE | cut -d ' ' -f 2)
+echo "num tests: " $NUMTESTS
+GRADE=$((100 - ($FAILS * 100 / $NUMTESTS)))
+echo "Grade: " $GRADE
+```
+Here is the full output:
+![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/92e19fda-280f-4b3d-8645-4075dbc37ebb)
 
-Enter message:
-`<Del>fixed<SPACE>bug`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/17fa5c23-98c4-4f26-83c3-196153586dc2)
+####
+**TA Response**
+Your syntax seems correct, try a different method of defining variables $FAILS and $NUMTESTS. They might not be integer or float values, thereby preventing any arithmetic from being conducted. Try to utilize `awk` for simplicity since it automatically uses spaces as a delimiter.
 
-To escape insert mode:
-`Esc`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/daa60654-4c9d-4b1b-af96-5f5585268bef)
+In the original script, it was trying to use cut to extract fields based on spaces. The main issue was the complexity of the text format it was dealing with:
+- The line Tests run: 5, Failures: 1 contains text with mixed delimiters (spaces and commas).
+- cut -d ' ' -f 5 attempts to split the text by spaces and extract the 5th field. However, this approach is fragile and can fail if the exact spacing or structure of the text changes.
+- This approach assumes a very specific structure of the line.
+- It failed because $LASTLINE was treated as a command substitution, not a string to be processed.
+####
+**Student Response**
+Here is my fixed code:
+```
+CPATH='.:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar'
 
-To save file and exit:
-`:wq<ENTER>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/0f87632a-3416-4041-b0a4-8244719e1c8c)
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/13a3d163-3ef7-432e-9df5-3e94a18e4089)
+rm -rf student-submission
+rm -rf grading-area
 
-Push the commit to Github:
-`git<SPACE>push<ENTER>`
-![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/890ed14e-6078-4c31-b82d-4522df107886)
+mkdir grading-area
+
+# step 1: clone the student's repo
+
+git clone $1 student-submission
+echo 'Finished cloning'
+
+# step 2 check that the student code contains ListExamples.java
+
+if [[ -f student-submission/ListExamples.java ]]; then
+    echo "File Existed"
+else
+    echo "ListExamples.java does not exist"
+    echo "Grade: 0"
+    exit 1
+fi
+
+# step 3: put all relevant files in the grading-area directory
+# ListExamples.java, TestListExamples.java, lib directory
+
+cp student-submission/ListExamples.java TestListExamples.java grading-area
+cp -r lib grading-area
+
+# step 4: Compile the java files and check that they compiled successfully
+cd grading-area
+javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" ListExamples.java TestListExamples.java
+echo "This is the exit code of javac: $?"
+
+# step 5: Grade the student's code
+touch output.txt
+java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples > output.txt
+
+tail -n 2 output.txt > output2.txt
+LASTLINE=$(head -n 1 output2.txt)
+echo "last line: $LASTLINE"
+
+# Parse the number of tests and failures from the LASTLINE
+NUMTESTS=$(echo $LASTLINE | awk '{print $3}' | cut -d',' -f1)
+FAILS=$(echo $LASTLINE | awk '{print $5}' | cut -d',' -f1)
+echo "num fails: $FAILS"
+echo "num tests: $NUMTESTS"
+
+# Calculate the grade
+GRADE=$((100 - (FAILS * 100 / NUMTESTS)))
+echo "Grade: $GRADE"
+```
+And here is the output. It worked, thank you!
+![image](https://github.com/dianavins/cse15l-lab-reports/assets/64227228/578f6dc1-92cb-4d90-8567-6d3026518471)
+####
+
+## Directory Structure:
+
+```
+.
+├── grade.sh
+├── GradeServer.java
+├── Server.java
+├── TestListExample.java
+├── lib
+│   ├── hamcrest-core-1.3.jar
+│   └── junit-4.13.2.jar
+├── student-submission
+│   └── ListExamples.java
+└── grading-area
+    ├── IsMoon.class
+    ├── ListExamples.java
+    ├── TestListExamples.java
+    ├── output.txt
+    ├── output2.txt
+    ├── StringChecker.class
+    ├── TestListExamples.class
+    ├── TestListExamples.java
+    └── lib
+        ├── hamcrest-core-1.3.jar
+        └── junit-4.13.2.jar
+```
+
+#####
+# Part 2
+Something you learned from your lab experience in the second half of this quarter that you didn't know before were JDB, VIM, bash scripts, and using git commands in the terminal other than git clone. I've never heard of JDB and am still trying to learn it. Interestingly enough, I first encountered VIM at my lab a day or two before it was introduced. I also was unaware that we could write scripts in bash, and began to understand what a "script" means in CS. Lastly, I was used to using GitHub extentions on VSCode rather than using git commands in bash, so it was useful to learn it.
